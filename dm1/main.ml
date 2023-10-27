@@ -1,5 +1,5 @@
 (** Enogad LE BIAVANT--FRÉDÉRIC *)
-(** ća aurait été plus simple de faire la documentation dans un .mli *)
+(** ça aurait été plus simple de faire la documentation dans un .mli *)
 
 let rec puissance x n = 
     if n = 0 then 1 

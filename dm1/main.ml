@@ -45,7 +45,7 @@ let rec compare_tailles l1 l2 =
     | ([], []) -> 0
     | (_, []) -> -1
     | ([], _) -> 1
-    | (_::t1,_::t2) -> compare_tailles t1 t2
+    | (_::t1, _::t2) -> compare_tailles t1 t2
 ;;
 
 let _ = assert (compare_tailles [2; 3; 4; 1; 6] [3; 2; 5] = -1);;
@@ -55,7 +55,7 @@ let _ = assert (compare_tailles [2; 3; 4] [3; 2; 5; 4] = 1);;
 (* Exercice 2 *)
 
 (* insere : 'a list -> 'a -> 'a list
- * [insere l x] puis renvoie une permutation de [l] une liste ordonnée contenant [x], où l'ordre est préservé.
+ * [insere l x] renvoie une permutation de [l] une liste ordonnée contenant [x], où l'ordre est préservé.
  *)
 let rec insere l x =
     match l with
@@ -93,14 +93,14 @@ let partitionne l =
     let rec partitionne_aux lx p =
         match lx with
         | [] -> ([], p, [])
-        | h::t -> let (l1, pv, l2) = partitionne_aux t p in
+        | h::t -> let (l1, _, l2) = partitionne_aux t p in
             if h <= p then
                 (h::l1, p, l2)
             else
                 (l1, p, h::l2)
     in 
     match l with
-    | [] -> failwith "no"
+    | [] -> failwith "Cannot evaluate function `partitionne` with empty list []."
     | h::t -> partitionne_aux t h
 
 ;;
@@ -204,7 +204,7 @@ let rec derivee p =
     match p with
     | [] -> []
     | h::t -> let { coeff = co; degre = deg } = h in
-    { coeff = co * deg; degre = deg - 1 }::(derivee t)
+        { coeff = co * deg; degre = deg - 1 }::(derivee t)
 ;;
 
 let _ = assert (derivee poly_q1 = [

@@ -31,8 +31,7 @@ let _ = assert (binom 5 5 = 1);;
 
 let rec croissant l = 
     match l with
-    | [] -> true
-    | _::[] -> true
+    | [] | _::[] -> true
     | h::n::t -> if h <= n then croissant (n::t) else false
 ;;
 

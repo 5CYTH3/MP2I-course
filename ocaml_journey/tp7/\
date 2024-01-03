@@ -1,0 +1,29 @@
+(* EXERCICE 1 *)
+
+type complex = {
+    mutable re: float;
+    mutable im: float;
+}
+
+let real_part (c: complex) = c.re;;
+let imaginary_part (c: complex) = c.im;;
+
+let conjugate c = c.im <- -. c.im;;
+
+let reinit c = 
+    c.im <- 0.0; 
+    c.re <- 0.0
+;;
+
+let norm c = Float.sqrt (c.re ** 2.0 +. c.im ** 2.0);;
+
+let incr c = c.re <- c.re +. 1.0;;
+
+let multiply_by c1 c2 = 
+    c1.re <- c1.re *. c2.re +. c1.re *. c1.im;
+    c1.im <- c1.im *. c2.re +. c2.im *. c1.im
+;;
+
+(* EXERCICE 2 *)
+
+let f x = print_newline (print_int x);;

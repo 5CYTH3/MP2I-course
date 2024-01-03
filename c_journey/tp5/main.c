@@ -116,8 +116,30 @@ void select_sort() {
 		}
 }
 
-int main() {
-		
+/////////////////////////////////////////////////////////
+//////// EXO 4	
+/////////////////////////////////////////////////////////
+
+void show_args(int argc, char* argv[]) {
+		for (int i = 0; i < argc; i++) {
+				printf("%d: %s\n", i, argv[i]);
+		}
+}
+
+
+void cli_based_exp(int argc, char* argv[]) {
+		if (argc != 3) { 
+				printf("You need to give exactly 2 arguments to the program.");
+		} else {
+				double x = atof(argv[1]);
+				int n = atoi(argv[2]);
+				printf("%f\n", fast_exp(x, n));
+		}
+}
+
+int main(int argc, char* argv[]) {
+		show_args(argc, argv);
+		cli_based_exp(argc, argv);
 		return 0;
 }
 

@@ -23,11 +23,12 @@ let list_to_file l = [], l;;
 
 (* Question 2 *)
 
-let rec are_equal q r = 
+(* let rec are_equal q r = 
     match (q, r) with
     | (a, b) when is_empty a && is_empty b -> true
     | (a, b) when is_empty a || is_empty b -> false
-    | ((h1::t1, h2::t2), (h3::t3, h4::t4)) -> s
+    | ((h1::t1, _), (h2::t2, _)) -> if h1 = h2 then are_equal (pop q) (pop r) else false
+*)
 
 (* Question 3 *)
 let pop f = 
@@ -87,12 +88,20 @@ let set v k x = Array.set v.data k x;;
 let length v = v.length;;
 
 (* Question 2 *)
-(* EUUUH PAS SUR *)
 let resize_naive v n =
     if n > length v then
-        v.data <- Array.make v.default (length v);
+        v.data <- Array.make v.default n;
         v.length <- n
 ;;
+
+(* Question 4 *)
+let resize v n =
+    if n > length v then
+        let len = 2. ** Float.log2(float_of_int n) in
+        v.data <- Array.make v.default (int_of_float len);
+        v.length <- (int_of_float len)
+;;
+
 
 (******************
  * EXERCICE 7
@@ -128,6 +137,7 @@ let op_app (o: operator): (int -> int -> int) =
 
 let eval_postfix l =
     let s = Stack.create () in 
+    (*  *)
     let rec eval_expr lx =
         match lx with
             | [] -> Stack.pop s
@@ -152,7 +162,6 @@ type infix_expr =
     | RParen
     | Op2 of operator
 ;;
-(* A finir...*)
 
 let display_infix_expr o =
     match o with
@@ -167,6 +176,19 @@ let display_infix_expr o =
     | LParen -> print_string "("
     | RParen -> print_string ")"
 ;;
+
+let is_well_parenthesized e =
+    let lparen_count = ref 0 in
+    let rparen_count = ref 0 in
+    begin match e with
+    | Val2 x -> ()
+    | Op2 o -> ()
+    | LParen -> lparen_count := !lparen_count + 1
+    | RParen -> rparen_count := !rparen_count + 1
+    end;
+    lparen_count = rparen_count
+;;
+
 
 
 (* Question 6 *)

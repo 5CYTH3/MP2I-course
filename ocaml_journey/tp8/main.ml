@@ -177,19 +177,22 @@ let display_infix_expr o =
     | RParen -> print_string ")"
 ;;
 
-let is_well_parenthesized e =
+let is_well_parenthesized l =
     let lparen_count = ref 0 in
     let rparen_count = ref 0 in
-    begin match e with
-    | Val2 x -> ()
-    | Op2 o -> ()
-    | LParen -> lparen_count := !lparen_count + 1
-    | RParen -> rparen_count := !rparen_count + 1
-    end;
+    let rec aux l = 
+        match l with
+        | [] -> ()
+        | h::t ->
+                match h with
+                | Val2 x -> aux t
+                | Op2 o -> aux t
+                | LParen -> lparen_count := !lparen_count + 1; aux t
+                | RParen -> rparen_count := !rparen_count + 1; aux t
+    in
+    aux l;
     lparen_count = rparen_count
 ;;
-
-
 
 (* Question 6 *)
 let eval_infix l =

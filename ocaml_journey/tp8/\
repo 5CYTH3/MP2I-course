@@ -78,7 +78,7 @@ type 'a vector = {
 (* Question 1 *)
 
 let make x n =
-    { data = Array.make n x; length = n; default = x; }
+    { data = Array.make x n; length = n; default = x; }
 ;;
 
 let get v k = Array.get v.data k;;
@@ -90,46 +90,51 @@ let length v = v.length;;
 (* Question 2 *)
 let resize_naive v n =
     let len = length v in
-    if n > len then 
+    if n >= len then 
         begin 
             v.data <- Array.append v.data (Array.make (n - len) v.default);
             v.length <- n
         end
     else if n = len then ()
     else
-        let new_a = Array.make n v.default in
-            for k = 0 to n - 1 do
-                new_a.(k) <- v.data.(k)
+        let new_a = ref (Array.make n v.default) in
+            for k = 0 to len - 1 do
+                !new_a.(k) <- v.data.(k)
             done;
-            v.data <- new_a;
+            new_a := Array.append !new_a (Array.make (n - len) v.default);
+            v.data <- !new_a;
             v.length <- n
 ;;
 
 (* Question 4 *)
 let resize v n =
     let len = length v in
-    if n > len then 
+    if n >= len then 
         begin 
             v.data <- Array.append v.data (Array.make (int_of_float (2. ** Float.ceil (Float.log2 (float_of_int n)))) v.default);
             v.length <- n
         end
     else if n = len then ()
     else
-        let new_a = Array.make n v.default in
-            for k = 0 to n - 1 do
-                new_a.(k) <- v.data.(k)
+        let new_a = ref (Array.make n v.default) in
+            for k = 0 to len - 1 do
+                !new_a.(k) <- v.data.(k)
             done;
-            v.data <- new_a;
+            new_a := Array.append !new_a (Array.make (n - len) v.default);
+            v.data <- !new_a;
             v.length <- n
 ;;
 
 let show_vec v =
     for k = 0 to (length v - 1) do
         print_int v.data.(k);
-        print_newline ()
     done;
     print_int v.length
 ;;
+
+let v = make 6 12;;
+let _ = resize v 17;;
+let _ = show_vec v;;
 
 
 (******************
@@ -207,7 +212,8 @@ let display_infix_expr o =
 ;;
 
 let is_well_parenthesized l =
-    let stack = Stack.create () in
+    let lparen_count = ref 0 in
+    let rparen_count = ref 0 in
     let rec aux l = 
         match l with
         | [] -> ()
@@ -215,20 +221,11 @@ let is_well_parenthesized l =
                 match h with
                 | Val2 x -> aux t
                 | Op2 o -> aux t
-                | LParen -> Stack.push LParen stack; aux t
-                | RParen -> 
-                            if Stack.is_empty stack then
-                                begin
-                                    Stack.push RParen stack;
-                                    aux t
-                                end
-                            else 
-                                let _ = Stack.pop in
-                                let _ = Stack.pop in
-                                aux t
+                | LParen -> lparen_count := !lparen_count + 1; aux t
+                | RParen -> rparen_count := !rparen_count + 1; aux t
     in
     aux l;
-    Stack.is_empty stack
+    lparen_count = rparen_count
 ;;
 
 (* Question 6 *)
@@ -267,46 +264,31 @@ let _ = Stack.iter display_infix_expr (eval_infix ex_i2)
  ******************)
 
 (* Question 1 *)
-type hospital = int Queue.t vector;;
+type 'a hospital = {
+    data: 'a Queue.t list;
+    length: int;
+}
 
-(* La type annotation est nécessaire. Sinon OCaml ne type pas la Queue et pense que cette dernière est d'un type 'a (or pas de généralisation possible, et des expansions êta ne règlent pas le problème) *)
-let make_hospital n : hospital = make (Queue.create ()) n
-
-let show_queue q =
-    if Queue.is_empty q then
-        print_string " [] "
-    else  
-        for k = 0 to (Queue.length q - 1) do
-            print_string " [";
-            print_int (Queue.pop q);
-            print_string "] "
-        done
-;;
-
-let show_hospital h =
-    for k = 0 to (length h - 1) do
-        show_queue (get h k);
-        print_newline ()
-    done
-;;
-
+(* push, pop *)
 let push h p = 
-    let (score, patient_id) = p in
-    if length h > (score + 1) then
-        resize h (score + 1)
-    else ();
-    Queue.push patient_id (get h score)
+    let rec aux count h p =
+        let (score, patient_id) = p in
+        match h.data with
+        | [] -> begin
+            let q = Queue.create () in
+            Queue.push patient_id q;
+            [q]
+        end
+        | hd::tl ->
+            if count < (List.length h.data - score) then
+                hd::(aux (count + 1) h p)
+            else begin
+                Queue.push patient_id hd;
+                hd::tl
+            end
+    in
+    aux 0 h p
 ;;
 
-let pop h =
-    if length h = 0 then
-        failwith "Cannot pop an empty hospital"
-    else
-        let rec aux count = 
-            if Queue.length (get h count) <> 0 then
-                Queue.pop (get h count)
-            else aux (count + 1)
-        in aux 0
-;;
 
 (* Question 2 *)

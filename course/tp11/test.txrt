@@ -1,0 +1,93 @@
+
+type ('a, 'b) tree =
+    | Leaf of 'a
+    | Node of 'b * ('a, 'b) tree * ('a, 'b) tree
+;;
+
+let exemple0 = Node (12,
+    Node(3, 
+        Node(6, Leaf true, Leaf false),
+        Node(13, Leaf true, Leaf true)
+    ),
+    Leaf false
+)
+
+let exemple1 = Node(4,
+    Leaf -1.3,
+    Node(0, 
+        Node(7, Node(2, Leaf 2.5, Leaf 3.1), Leaf 4.1),
+        Leaf -1.2
+    )
+)
+
+(* Question 3 *)
+let rec last t = 
+    match t with
+    | Leaf x -> x
+    | Node (e, l, r)  -> last r
+;;
+
+(**************)
+(* EXERCICE 1 *)
+(**************)
+
+(* Question 1 *)
+let rec show_prefix t =
+    match t with
+    | Leaf x -> print_float x
+    | Node (e, l, r) -> begin
+        print_int e;
+        show_prefix l;
+        show_prefix r
+    end
+;;
+
+(* Question 2 *)
+let rec show_infix t =
+    match t with
+    | Leaf x -> print_float x
+    | Node (e, l, r) -> begin
+        show_prefix l;
+        print_int e;
+        show_prefix r
+    end
+;;
+
+let rec show_postfix t =
+    match t with
+    | Leaf x -> print_float x
+    | Node (e, l, r) -> begin
+        show_prefix l;
+        show_prefix r;
+        print_int e
+    end
+;;
+
+(* Question 3 *)
+(* TODO *)
+
+
+(**************)
+(* EXERCICE 2 *)
+(**************)
+
+type ('a, 'b) token = F of 'a | N of 'b;;
+
+(* Question 0 *)
+let rec naive_postfix t =
+    match t with
+    | Leaf x -> [F x]
+    | Node (e, l, r) -> (naive_postfix l @ naive_postfix r) @ [N e]
+;;
+
+let _ = assert(naive_postfix exemple1 = [F 0.3; F 2.5; F 3.1; N 2; F 4.1; N 8; F 0.2; N 1; N 4])
+
+(* Question 1 *)
+let postfix t =
+    let rec aux acc t =
+        match t with
+        | Leaf x -> x::acc
+        | Node (e, l, r) -> aux e::acc 
+
+
+

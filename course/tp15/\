@@ -1,0 +1,13 @@
+type bit = Z | U;;
+type numbers = bit list;;
+
+let zero = [];;
+let siz = [Z; U; U];;
+
+let succ (num: numbers) = 
+    match List.rev num with
+    | [] -> [Z; U]
+    | h::t -> 
+            if h == U then
+                h::(succ t)
+            else U::t

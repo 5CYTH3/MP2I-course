@@ -36,7 +36,7 @@ let is_leaf a =
 (* Question 4 *)
 let rec leaf_count a =
     match a with
-    | Noeud (e, g, d) when is_leaf (Noeud (e, g, d)) -> 1 + leaf_count g + is_leaf d
+    | Noeud (e, g, d) when is_leaf (Noeud (e, g, d)) -> 1 + leaf_count g + leaf_count d
     | Vide | _ -> 0
 ;;
 
@@ -49,7 +49,7 @@ let rec label_sum = function
 (* Question 6 *)
 let rec leaf_sum a =
     match a with
-    | Noeud (e, g, d) when is_leaf (Noeud (e, g, d)) -> e + leaf_count g + is_leaf d
+    | Noeud (e, g, d) when is_leaf (Noeud (e, g, d)) -> e + leaf_sum g + leaf_sum d
     | Vide | _ -> 0
 ;;
 
@@ -62,6 +62,7 @@ let rec iter a =
 
 (* Question 8 *)
 (* A finir *)
+(*
 let tree_min_max a =
     let iterator = iter a in
     let rec tree_max i m =
@@ -69,7 +70,7 @@ let tree_min_max a =
         | [] -> failwith "empty"
         | h::n::t -> 
 ;;
-
+*) 
 (* Question 9 A faire *)
 
 (****************
@@ -82,7 +83,8 @@ type 'a tree_gen =
     | Noeud of 'a * 'a forest
 and 'a forest = 'a tree_gen list;; 
 
-let height a = 
+(* CA MARCHE PAS MAIS JSP POURQUOI
+let rec height a = 
     match a with
     | Vide -> -1
     | Noeud (_, l) -> 1 + forest_height l
@@ -91,3 +93,4 @@ and forest_height l =
     | [] -> -1
     | h::t -> (height h) (forest_height t)
 ;;
+*)

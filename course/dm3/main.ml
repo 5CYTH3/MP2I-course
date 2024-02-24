@@ -149,7 +149,6 @@ let rec insere t m =
     | V, h::t -> N (h, insere V t, V)
     | N (c, g, d), h::t ->
             if c = h then N (c, insere g t, d)
-            else if h < c then N (c, insere g m, d)
             else N (c, g, insere d m)
 ;;
 

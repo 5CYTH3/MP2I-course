@@ -1,18 +1,19 @@
 # Idées de sujets 
-- Techniques d'optimisation du processus de compilation (théorie des graphes et des langages maybe, opti d'IR)
+- Techniques d'optimisation du processus de compilation (théorie des graphes pour garbage collector?, dead-code elimination, détection d'invariants de boucle, optimisation via récursivité terminale, réduction de la force des instructions (3*x = x+x+x)).
 - Généraliser le processus d'analyse sémantique et lexicale (reproduire d'une autre approche LEX)
-- Prouver qu'un assistant de preuvre prouve (correspondance curry-howard)
+- Approche naïve de la création d'un assistant de preuve (correspondance curry-howard)?
 - Vers d'autre types de langages de programmation a grammaire alternative ?
+- Utilisation de la théorie des types homotopiques dans la recherche d'équivalents dans le but d'optimisations (comme haskell qui reconnaît l'équivalence entre calcul paresseux de la somme des éléments d'une liste et loop à variable tempo).
+- Se renseigner sur les langages d'ordre supérieur type Agda (cf. types dépendants).
 
 # Les domaines qui nous intéressent
 - Compilation
 - Théorie des langages
 - Théorie des types
 - Théorie des automates
-- Lambda-calcul
 
 ### After narrowed down
-- Théorie des catégories
+- Théorie des catégories // Ouais no-shot, impossible que ce truc là rentre dans un des sujets
 - Théorie des types homotopiques
 - Algorithmes d'inférence de type *
 

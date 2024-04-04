@@ -17,6 +17,7 @@ fn main_file() -> String {
     r#"#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "../testing/test.h"
 
 int main() {
     return 0;
@@ -26,22 +27,55 @@ int main() {
 }
 
 fn test_lib() -> String {
-    r#"#include <stdlib.h>
-#include <stdio.h>
+    r#"#pragma once
+#include <time.h>
 #include <stdbool.h>
+#include <stdio.h>
 
-bool test(void *arr, void (*fun_ptr) (...)) {
-    
-}
-        "#
-    .to_owned()
-}
+#define test_void(f) \
+({ \
+		printf("==================================\n"); \
+		printf("[Test] of \"%s\"\n", #f); \
+		printf("Type: void\n"); \
+		clock_t fst = clock(); \
+		f(); \
+		clock_t snd = clock(); \
+		printf("Function run time: %f s\n", (snd-fst) * 1.0 / CLOCKS_PER_SEC); \
+		printf("==================================\n"); \
+})
 
-fn make_file() -> String {
-    r#"main.c:
+#define test_value(x, s) \
+({ \
+		printf("==================================\n"); \
+		printf("[Test] of \"%s\"\n", #x); \
+		printf("Type: typed\n"); \
+		clock_t fst = clock(); \
+		if (x == s) { \
+				printf("Test: PASSED.\n"); \
+		} else { \
+				printf("Test: FAILED.\n"); \
+		} \
+		clock_t snd = clock(); \
+		printf("Function run time: %f s\n", (snd-fst) * 1.0 / CLOCKS_PER_SEC); \
+		printf("=================================="); \
+})
 
-        "#
-    .to_owned()
+#define test(f, s) \
+({ \
+		printf("==================================\n"); \
+		printf("[Test] of \"%s\"\n", #f); \
+		printf("Type: typed\n"); \
+		clock_t fst = clock(); \
+		if (f() == s) { \
+				printf("Test: PASSED.\n"); \
+		} else { \
+				printf("Test: FAILED.\n"); \
+		} \
+		clock_t snd = clock(); \
+		printf("Function run time: %f s\n", (snd-fst) * 1.0 / CLOCKS_PER_SEC); \
+		printf("=================================="); \
+})        "#
+        .to_owned()
 }
 
 fn generate(name: &String) {
@@ -70,14 +104,7 @@ fn generate(name: &String) {
         Ok(_) => {}
     }
 
-    match fs::write(format!("{}/testing/test.c", name), test_lib()) {
-        Err(why) => println!(
-            "Error when creating tne main file. Error : {:?}",
-            why.kind()
-        ),
-        Ok(_) => {}
-    }
-    match fs::write(format!("{}/Makefile", name), make_file()) {
+    match fs::write(format!("{}/testing/test.h", name), test_lib()) {
         Err(why) => println!(
             "Error when creating tne main file. Error : {:?}",
             why.kind()

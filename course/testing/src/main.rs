@@ -10,7 +10,7 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Commands {
-    Generate { name: String },
+    Gen { name: String },
 }
 
 fn main_file() -> String {
@@ -116,6 +116,6 @@ fn generate(name: &String) {
 fn main() {
     let cli = Cli::parse();
     match cli.command {
-        Commands::Generate { name } => generate(&name),
+        Commands::Gen { name } => generate(&name),
     }
 }
